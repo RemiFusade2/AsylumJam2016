@@ -8,6 +8,8 @@ public class MonsterBehaviour : MonoBehaviour {
 	public static Vector3 lastSeenPosition;
 	private NavMeshAgent _agent;
 	public bool _moving;
+	public float _sightRange;
+	public GameObject _player;
 
 	// Use this for initialization
 	void Start () {
@@ -38,13 +40,27 @@ public class MonsterBehaviour : MonoBehaviour {
 				lastSeenPosition = Vector3.zero;
 			}
 		}
+
+		if (Vector3.Distance (this.transform.position, _player.transform.position) < _sightRange && Vector3.Angle(this.transform.position, _player.transform.position) < 60f) 
+		{
+			RaycastHit hit;
+			if (Physics.Linecast (this.transform.position, _player.transform.position, out hit)) 
+			{
+				if (hit.collider.tag != "Monster" && hit.collider.tag != "Player") 
+				{
+					_agent.destination = _player.transform.position;
+					lastSeenPosition = _player.transform.position;
+				}
+			}
+		}
 	}
 
-	void OnColliderEnter(Collision objectCol)
-	{
-		if (objectCol.collider.tag == "Player") 
+    void OnTriggerEnter(Collider objectCol)
+    {
+		if (objectCol.tag == "Player") 
 		{
-			//GameOver
+            //GameOver
+            Application.LoadLevel("level1");
 		}
 	}
 
