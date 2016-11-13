@@ -15,6 +15,8 @@ public class Blink : MonoBehaviour {
     private Vector3 currentTargetPointTop;
     private Vector3 currentTargetPointBot;
 
+    public float invisible;
+
     // Use this for initialization
     void Start ()
     {
@@ -35,8 +37,10 @@ public class Blink : MonoBehaviour {
         BlinkTop.transform.localPosition = Vector3.Lerp (BlinkTop.transform.localPosition, currentTargetPointTop, _smoothTime);//new Vector3 (endPoint.x, startPoint.y + ((endPoint.y - startPoint.y) * (Input.GetAxis("Vertical") + 1) /2), endPoint.z);
 		BlinkBot.transform.localPosition = Vector3.Lerp (BlinkBot.transform.localPosition, currentTargetPointBot, _smoothTime);//new Vector3 (endPoint2.x, startPoint2.y + ((endPoint2.y - startPoint2.y) * (Input.GetAxis("Vertical") + 1) /2), endPoint2.z);
 
-		Debug.Log (triggerRatio);
-	}
+        invisible = triggerRatio;
+
+        //Debug.Log (invisible);
+    }
 
 
 }
