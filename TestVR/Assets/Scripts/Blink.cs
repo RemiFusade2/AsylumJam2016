@@ -1,46 +1,59 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Blink : MonoBehaviour {
+    
 
-	public Vector3 startPoint;
-	public Vector3 endPoint;
-	public Vector3 startPoint2;
-	public Vector3 endPoint2;
 	public GameObject BlinkTop;
 	public GameObject BlinkBot;
-	public float _smoothTime;
-	public float _separation;
+    public GameObject alphaPanel;
 
-    private Vector3 currentTargetPointTop;
-    private Vector3 currentTargetPointBot;
+    public GameObject alphaPanelHiddenText;
+
+	public float _smoothTime;
+    
+    private float _targetInvisible;
 
     public float invisible;
+    private bool takeInput;
+
+    public void ForceInvisible(float newValue)
+    {
+        invisible = newValue;
+        _targetInvisible = newValue;
+    }
 
     // Use this for initialization
     void Start ()
     {
-		endPoint = BlinkTop.transform.localPosition;
-		endPoint2 = BlinkBot.transform.localPosition;
-		startPoint = new Vector3 (endPoint.x, endPoint.y + _separation, endPoint.z);
-		startPoint2 = new Vector3 (endPoint2.x, endPoint2.y - _separation, endPoint2.z);
-	}
-	
+        _targetInvisible = invisible = 0;
+        takeInput = true;
+    }
+
 	// Update is called once per frame
 	void Update ()
     {
-        float triggerRatio = (Input.GetAxis("Blink") + 1) / 2.0f;
 
-        currentTargetPointTop = Vector3.Lerp(startPoint, endPoint, triggerRatio);
-        currentTargetPointBot = Vector3.Lerp(startPoint2, endPoint2, triggerRatio);
+        if(takeInput)
+        {
+            _targetInvisible -= Input.GetAxis("Blink") / 2.0f;
+        }
+        _targetInvisible = _targetInvisible < 0 ? 0 : (_targetInvisible > 1 ? 1 : _targetInvisible);
 
-        BlinkTop.transform.localPosition = Vector3.Lerp (BlinkTop.transform.localPosition, currentTargetPointTop, _smoothTime);//new Vector3 (endPoint.x, startPoint.y + ((endPoint.y - startPoint.y) * (Input.GetAxis("Vertical") + 1) /2), endPoint.z);
-		BlinkBot.transform.localPosition = Vector3.Lerp (BlinkBot.transform.localPosition, currentTargetPointBot, _smoothTime);//new Vector3 (endPoint2.x, startPoint2.y + ((endPoint2.y - startPoint2.y) * (Input.GetAxis("Vertical") + 1) /2), endPoint2.z);
+        invisible += Mathf.Sign(_targetInvisible - invisible) * 0.01f;
 
-        invisible = triggerRatio;
+        alphaPanelHiddenText.SetActive(invisible >= 0.95f);
 
-        //Debug.Log (invisible);
+        BlinkTop.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (Screen.height+10) * invisible);
+        BlinkBot.GetComponent<RectTransform>().sizeDelta = new Vector2(0, (Screen.height+10) * invisible);
+        alphaPanel.GetComponent<Image>().color = new Color(0,0,0,invisible*invisible);
     }
 
+    public void ForceClose()
+    {
+        _targetInvisible = 1.0f;
+        takeInput = false;
+    }
 
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
@@ -41,6 +42,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+
+        public CharacterController GetCharacterController()
+        {
+            return m_CharacterController;
+        }
+
+        public void SetFootStepsSound (List<AudioClip> footstepsSounds)
+        {
+            m_FootstepSounds = footstepsSounds.ToArray();
+        }
 
         // Use this for initialization
         private void Start()

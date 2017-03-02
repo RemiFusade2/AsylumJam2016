@@ -6,7 +6,7 @@ public class WatcherEngineScript : MonoBehaviour {
 
     public GameObject playerBlink;
 
-    public List<WatcherBehaviour> watchers;
+    public Transform watchersContainer;
     
 	// Use this for initialization
 	void Start () {
@@ -18,16 +18,16 @@ public class WatcherEngineScript : MonoBehaviour {
     {
         if (playerBlink.GetComponent<Blink>().invisible >= 1)
         {
-            foreach (WatcherBehaviour watcher in watchers)
+            foreach (Transform watcher in watchersContainer)
             {
-                watcher.MoveWatcher();
+                watcher.GetComponent<WatcherBehaviour>().MoveWatcher();
             }
         }
         else
         {
-            foreach (WatcherBehaviour watcher in watchers)
+            foreach (Transform watcher in watchersContainer)
             {
-                watcher.StopWatcher();
+                watcher.GetComponent<WatcherBehaviour>().StopWatcher();
             }
         }
 	}
