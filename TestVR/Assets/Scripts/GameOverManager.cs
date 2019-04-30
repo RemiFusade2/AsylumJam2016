@@ -23,6 +23,7 @@ public class GameOverManager : MonoBehaviour {
 
     public AudioSource GameOverSoundSource;
     public AudioClip GameOverSound;
+    
 
 	// Use this for initialization
 	void Start () {

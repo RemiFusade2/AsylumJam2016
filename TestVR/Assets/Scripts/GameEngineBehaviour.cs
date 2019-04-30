@@ -2,8 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameEngineBehaviour : MonoBehaviour {
+
+    public static GameEngineBehaviour instance;
 
     public GameObject MainMenuPanel;
     public GameObject HelpPanel;
@@ -33,6 +36,10 @@ public class GameEngineBehaviour : MonoBehaviour {
 
     public bool messageChange;
 
+    void Awake()
+    {
+        instance = this;
+    }
 
     IEnumerator WaitAndCheckForMessage(float timer)
     {
@@ -84,41 +91,59 @@ public class GameEngineBehaviour : MonoBehaviour {
     {
 	    if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (HelpPanel.activeInHierarchy)
-            {
-                this.GetComponent<AudioSource>().clip = MenuClickSound;
-                this.GetComponent<AudioSource>().Play();
-                HelpPanel.SetActive(false);
-            }
-            else if (GameOverPanel.activeInHierarchy)
-            {
-                this.GetComponent<AudioSource>().clip = MenuClickSound;
-                this.GetComponent<AudioSource>().Play();
-                GameOverPanel.SetActive(false);
-            }
-            else if (SuccessPanel.activeInHierarchy)
-            {
-                this.GetComponent<AudioSource>().clip = MenuClickSound;
-                this.GetComponent<AudioSource>().Play();
-                SuccessPanel.SetActive(false);
-            }
-            else if (MainMenuPanel.activeInHierarchy)
-            {
-                QuitGame();
-            }
-            else if (!gameIsStarted)
-            {
-                this.GetComponent<AudioSource>().clip = MenuClickSound;
-                this.GetComponent<AudioSource>().Play();
-                MainMenuPanel.SetActive(true);
-            }
+            Escape();
         }
 
-        if (!gameIsStarted && !HelpPanel.activeInHierarchy && !GameOverPanel.activeInHierarchy && !SuccessPanel.activeInHierarchy && BlinkScript.invisible >= 1)
+        if (!gameIsStarted && !GameOverPanel.activeInHierarchy && !SuccessPanel.activeInHierarchy && BlinkScript.invisible >= 1)
         {
             StartGame();
         }
 	}
+
+    public bool IsGameOver()
+    {
+        return GameOverPanel.activeInHierarchy;
+    }
+
+    public void Escape()
+    {
+        if (HelpPanel.activeInHierarchy)
+        {
+            this.GetComponent<AudioSource>().clip = MenuClickSound;
+            this.GetComponent<AudioSource>().Play();
+            HelpPanel.SetActive(false);
+        }
+        else if (GameOverPanel.activeInHierarchy)
+        {
+            /*
+            this.GetComponent<AudioSource>().clip = MenuClickSound;
+            this.GetComponent<AudioSource>().Play();
+            GameOverPanel.SetActive(false);*/
+        }
+        else if (SuccessPanel.activeInHierarchy)
+        {
+            /*
+            this.GetComponent<AudioSource>().clip = MenuClickSound;
+            this.GetComponent<AudioSource>().Play();
+            SuccessPanel.SetActive(false);*/
+        }
+        else if (MainMenuPanel.activeInHierarchy)
+        {
+            QuitGame();
+        }
+        else if (!gameIsStarted)
+        {
+            this.GetComponent<AudioSource>().clip = MenuClickSound;
+            this.GetComponent<AudioSource>().Play();
+            MainMenuPanel.SetActive(true);
+        }
+        else if (gameIsStarted)
+        {
+            this.GetComponent<AudioSource>().clip = MenuClickSound;
+            this.GetComponent<AudioSource>().Play();
+            SceneManager.LoadScene("level1");
+        }
+    }
 
     public void StartGame()
     {
@@ -126,6 +151,7 @@ public class GameEngineBehaviour : MonoBehaviour {
         this.GetComponent<AudioSource>().clip = MenuClickSound;
         this.GetComponent<AudioSource>().Play();
         MainMenuPanel.SetActive(false);
+        HelpPanel.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         checkformessages = StartCoroutine(WaitAndCheckForMessage(15.0f));
@@ -144,6 +170,7 @@ public class GameEngineBehaviour : MonoBehaviour {
 
     public void ShowHelpPanel()
     {
+        this.GetComponent<AudioSource>().volume = 0.8f;
         this.GetComponent<AudioSource>().clip = MenuClickSound;
         this.GetComponent<AudioSource>().Play();
         HelpPanel.SetActive(true);
@@ -151,6 +178,7 @@ public class GameEngineBehaviour : MonoBehaviour {
 
     public void QuitGame()
     {
+        this.GetComponent<AudioSource>().volume = 0.8f;
         this.GetComponent<AudioSource>().clip = MenuClickSound;
         this.GetComponent<AudioSource>().Play();
         Application.Quit();
@@ -170,6 +198,7 @@ public class GameEngineBehaviour : MonoBehaviour {
 
     public void MenuButtonHover()
     {
+        this.GetComponent<AudioSource>().volume = 0.2f;
         this.GetComponent<AudioSource>().clip = MenuHoverSound;
         this.GetComponent<AudioSource>().Play();
     }

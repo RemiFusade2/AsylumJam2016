@@ -137,6 +137,7 @@ public class WatcherBehaviour : MonoBehaviour
                 StartCoroutine(WaitAndSetEyesOpened(2.0f, true));
             }
 
+            MonsterBehaviour.pauseAndWaitForPlayer = false;
             MonsterBehaviour.lastSeenPosition = player.transform.position;
             MonsterBehaviour.lastSeenPositionUpdateTime = Time.time;
         }
@@ -173,7 +174,7 @@ public class WatcherBehaviour : MonoBehaviour
 
     public void MoveWatcher()
     {
-        this.GetComponent<NavMeshAgent>().Resume();
+        this.GetComponent<UnityEngine.AI.NavMeshAgent>().isStopped = false;
 
         if (footstepsCoroutine == null)
         {
@@ -183,9 +184,9 @@ public class WatcherBehaviour : MonoBehaviour
 
     public void StopWatcher()
     {
-        if (this.GetComponent<NavMeshAgent>().isActiveAndEnabled)
+        if (this.GetComponent<UnityEngine.AI.NavMeshAgent>().isActiveAndEnabled)
         {
-            this.GetComponent<NavMeshAgent>().Stop();
+            this.GetComponent<UnityEngine.AI.NavMeshAgent>().isStopped = true;
         }
 
         if (footstepsCoroutine != null)
@@ -205,6 +206,6 @@ public class WatcherBehaviour : MonoBehaviour
 
         destination = patrolCenter + distance * direction;
 
-        this.GetComponent<NavMeshAgent>().SetDestination(destination);
+        this.GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(destination);
     }
 }
